@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" class="dark" style="color-scheme: dark;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Development Tools — Monad Build</title>
+  <meta name="description" content="Smart contract frameworks, SDKs, RPC endpoints, faucets and debugging tools for building on Monad.">
+  <link rel="stylesheet" href="monad.css">
+</head>
+<body>
+<div class="site-wrapper">
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="index.html" class="logo"><span class="logo-mark">M</span>Monad Build</a>
+        <nav class="site-nav" id="site-nav">
+          <a href="index.html">Home</a>
+          <a href="development-tools.html" class="active">Dev Tools</a>
+          <a href="documentation.html">Docs</a>
+          <a href="explorer.html">Explorer</a>
+          <a href="mainnet.html">Mainnet</a>
+          <a href="testnet.html">Testnet</a>
+          <a href="node.html">Node</a>
+        </nav>
+        <a href="testnet.html" class="header-cta">Launch Testnet &#8599;</a>
+        <button class="mobile-menu-btn" onclick="document.getElementById('site-nav').classList.toggle('open')" aria-label="Toggle menu">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect y="0" width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <div class="container">
+
+      <div class="page-hero">
+        <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Development Tools</div>
+        <div class="flex items-center gap-3" style="flex-wrap:wrap;margin-bottom:0.75rem;">
+          <h1>Development Tools</h1>
+          <span class="status-badge status-live"><span class="status-dot"></span>Actively maintained</span>
+        </div>
+        <p>Everything you need to build, test, and deploy smart contracts on Monad. All standard Ethereum tooling works out of the box — just point it at the Monad RPC endpoint and you are ready to go.</p>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          <a href="documentation.html" class="btn btn-primary">Read the Docs &#8594;</a>
+          <a href="testnet.html" class="btn btn-secondary">Get Testnet Tokens</a>
+        </div>
+      </div>
+
+      <!-- Smart Contract Frameworks -->
+      <section class="section" style="padding-top:0;" id="frameworks">
+        <span class="section-label">Frameworks</span>
+        <h2 class="section-title">Smart Contract Development</h2>
+        <p class="section-subtitle">Monad is fully EVM-compatible. Every tool you use for Ethereum development works on Monad without modification — simply update the network configuration.</p>
+
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon">&#128296;</div>
+            <h3>Foundry</h3>
+            <p>The fastest Ethereum development toolkit. Write tests in Solidity, run fuzz campaigns, and deploy to Monad with <code>forge</code> and <code>cast</code>. Update <code>foundry.toml</code> with the Monad RPC URL.</p>
+            <a href="https://book.getfoundry.sh/" target="_blank" rel="noopener" class="card-link">Foundry docs &#8594;</a>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#9881;</div>
+            <h3>Hardhat</h3>
+            <p>Flexible JavaScript-based framework popular in the Ethereum ecosystem. Add the Monad network to <code>hardhat.config.ts</code>, run <code>npx hardhat deploy</code>, and your contracts are live on Monad.</p>
+            <a href="https://hardhat.org/docs" target="_blank" rel="noopener" class="card-link">Hardhat docs &#8594;</a>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128187;</div>
+            <h3>Remix IDE</h3>
+            <p>Browser-based Solidity IDE with one-click deployment. Select "Injected Web3" or "Custom RPC" and enter the Monad Testnet endpoint to deploy directly from the browser — no local setup required.</p>
+            <a href="https://remix.ethereum.org/" target="_blank" rel="noopener" class="card-link">Open Remix &#8594;</a>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128062;</div>
+            <h3>Truffle / Ganache</h3>
+            <p>Legacy but widely used Ethereum development suite. Monad's EVM equivalence means existing Truffle migration scripts run unchanged. Local Ganache forks can simulate Monad state for fast iteration.</p>
+            <a href="https://trufflesuite.com/" target="_blank" rel="noopener" class="card-link">Truffle suite &#8594;</a>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- SDKs -->
+      <section class="section" id="sdk">
+        <span class="section-label">Libraries &amp; SDKs</span>
+        <h2 class="section-title">JavaScript / TypeScript SDKs</h2>
+        <p class="section-subtitle">Interact with Monad from any JavaScript or TypeScript application using the same libraries you already know from Ethereum development.</p>
+
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon">&#128099;</div>
+            <h3>ethers.js v6</h3>
+            <p>The gold-standard Ethereum library for web and Node.js. Connect to Monad by initialising a provider with the Monad JSON-RPC URL — all contract interactions, signing, and event listening work identically.</p>
+            <div class="prose-section" style="margin-top:1rem;">
+              <pre><code>import { JsonRpcProvider } from "ethers";
+const provider = new JsonRpcProvider(
+  "https://rpc.monad.xyz/testnet"
+);</code></pre>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128737;</div>
+            <h3>viem</h3>
+            <p>A modern, TypeScript-first Ethereum client library optimised for type safety and tree-shaking. Add Monad as a custom chain definition and use the full viem API surface against Monad's RPC with zero extra configuration.</p>
+            <div class="prose-section" style="margin-top:1rem;">
+              <pre><code>import { createPublicClient, http } from "viem";
+import { monadTestnet } from "./chains";
+const client = createPublicClient({
+  chain: monadTestnet,
+  transport: http()
+});</code></pre>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128200;</div>
+            <h3>Wagmi</h3>
+            <p>React hooks for Ethereum — wallet connection, contract reads/writes, transaction watching, and more. Wagmi's chain registry includes Monad Testnet. Import <code>monadTestnet</code> from <code>wagmi/chains</code> to connect your dApp UI.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#127891;</div>
+            <h3>web3.js</h3>
+            <p>The classic JavaScript Ethereum library. Instantiate a Web3 instance with the Monad RPC endpoint and all existing web3.js code works without changes — useful for maintaining legacy applications during migration.</p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- RPC & Infrastructure -->
+      <section class="section">
+        <span class="section-label">Infrastructure</span>
+        <h2 class="section-title">RPC Endpoints &amp; Network Access</h2>
+        <p class="section-subtitle">Public RPC endpoints for developing against Monad. For production workloads, consider a dedicated endpoint or running your own node.</p>
+
+        <table class="net-table" style="background:var(--bg-card);border-radius:12px;overflow:hidden;border:1px solid var(--border-color);">
+          <thead>
+            <tr>
+              <th>Network</th>
+              <th>RPC URL</th>
+              <th>Chain ID</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Monad Testnet</td>
+              <td class="val">https://rpc.monad.xyz/testnet</td>
+              <td class="val">10143</td>
+              <td><span class="status-badge status-live"><span class="status-dot"></span>Live</span></td>
+            </tr>
+            <tr>
+              <td>Monad Testnet (WebSocket)</td>
+              <td class="val">wss://rpc.monad.xyz/testnet</td>
+              <td class="val">10143</td>
+              <td><span class="status-badge status-live"><span class="status-dot"></span>Live</span></td>
+            </tr>
+            <tr>
+              <td>Monad Mainnet</td>
+              <td class="val">https://rpc.monad.xyz</td>
+              <td class="val">TBA</td>
+              <td><span class="tag">Upcoming</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- Debugging -->
+      <section class="section">
+        <span class="section-label">Debugging &amp; Testing</span>
+        <h2 class="section-title">Test, Debug, and Verify Contracts</h2>
+        <div class="prose-section">
+          <p>Monad exposes the full Ethereum JSON-RPC debug namespace, giving you access to detailed transaction traces, opcode-level execution logs, and state diffs — essential for diagnosing issues in complex DeFi protocols or multi-contract interactions.</p>
+
+          <h3>Trace a Transaction</h3>
+          <p>Use <code>debug_traceTransaction</code> to get an opcode-by-opcode execution trace of any transaction on the network. Combine with Foundry's <code>cast run</code> or Hardhat's <code>hardhat-tracer</code> plugin for a richer developer experience.</p>
+          <pre><code>cast run --rpc-url https://rpc.monad.xyz/testnet \
+  0xYOUR_TX_HASH</code></pre>
+
+          <h3>Local Forking</h3>
+          <p>Fork the Monad Testnet locally to simulate state without broadcasting real transactions. Foundry's Anvil supports this natively:</p>
+          <pre><code>anvil --fork-url https://rpc.monad.xyz/testnet</code></pre>
+
+          <h3>Contract Verification</h3>
+          <p>Verify your contract source code on the Monad Explorer so users and auditors can read and interact with it transparently. Foundry supports verification in one command:</p>
+          <pre><code>forge verify-contract \
+  --chain-id 10143 \
+  --verifier blockscout \
+  --verifier-url https://explorer.monad.xyz/api \
+  0xCONTRACT_ADDRESS \
+  src/MyContract.sol:MyContract</code></pre>
+
+          <div class="highlight-box">
+            <p><strong>Tip:</strong> Because Monad processes transactions in parallel, contracts that modify shared state (e.g. AMM pools) may behave differently under high load than on a sequential chain. Use Foundry's fuzz testing and invariant testing to surface edge cases before deploying to mainnet.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo" style="margin-bottom:0.75rem;display:inline-flex;"><span class="logo-mark">M</span> Monad Build</a>
+          <p>The next-generation EVM-compatible Layer-1 blockchain built for 10,000+ TPS, sub-second finality, and full Ethereum developer compatibility.</p>
+          <div class="footer-socials">
+            <a href="https://twitter.com/monad_xyz" target="_blank" rel="noopener" title="X / Twitter">&#x1D54F;</a>
+            <a href="https://discord.gg/monad" target="_blank" rel="noopener" title="Discord">&#128172;</a>
+            <a href="https://github.com/monad-lab" target="_blank" rel="noopener" title="GitHub">&#8997;</a>
+            <a href="https://t.me/monad_xyz" target="_blank" rel="noopener" title="Telegram">&#9992;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Network</h5>
+          <ul>
+            <li><a href="mainnet.html">Mainnet</a></li>
+            <li><a href="testnet.html">Testnet</a></li>
+            <li><a href="node.html">Run a Node</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Build</h5>
+          <ul>
+            <li><a href="documentation.html">Documentation</a></li>
+            <li><a href="development-tools.html">Dev Tools</a></li>
+            <li><a href="documentation.html#api">API Reference</a></li>
+            <li><a href="development-tools.html#sdk">SDKs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Community</h5>
+          <ul>
+            <li><a href="https://discord.gg/monad" target="_blank" rel="noopener">Discord</a></li>
+            <li><a href="https://twitter.com/monad_xyz" target="_blank" rel="noopener">Twitter / X</a></li>
+            <li><a href="https://github.com/monad-lab" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://forum.monad.xyz" target="_blank" rel="noopener">Forum</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Monad Build. All rights reserved.</p>
+        <p><a href="documentation.html">Terms</a> &middot; <a href="documentation.html">Privacy</a></p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

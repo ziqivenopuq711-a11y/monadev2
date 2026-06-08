@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" class="dark" style="color-scheme: dark;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mainnet — Monad Build</title>
+  <meta name="description" content="Monad Mainnet — network parameters, ecosystem projects, staking, and bridging information.">
+  <link rel="stylesheet" href="monad.css">
+</head>
+<body>
+<div class="site-wrapper">
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="index.html" class="logo"><span class="logo-mark">M</span>Monad Build</a>
+        <nav class="site-nav" id="site-nav">
+          <a href="index.html">Home</a>
+          <a href="development-tools.html">Dev Tools</a>
+          <a href="documentation.html">Docs</a>
+          <a href="explorer.html">Explorer</a>
+          <a href="mainnet.html" class="active">Mainnet</a>
+          <a href="testnet.html">Testnet</a>
+          <a href="node.html">Node</a>
+        </nav>
+        <a href="testnet.html" class="header-cta">Launch Testnet &#8599;</a>
+        <button class="mobile-menu-btn" onclick="document.getElementById('site-nav').classList.toggle('open')" aria-label="Toggle menu">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect y="0" width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <div class="container">
+
+      <div class="page-hero">
+        <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Mainnet</div>
+        <div class="flex items-center gap-3" style="flex-wrap:wrap;margin-bottom:0.75rem;">
+          <h1>Monad Mainnet</h1>
+          <span class="tag" style="font-size:0.8rem;padding:0.3rem 0.8rem;border-color:var(--yellow);color:var(--yellow);background:rgba(251,191,36,0.08);">&#9202; Launching Soon</span>
+        </div>
+        <p>The Monad Mainnet will bring 10,000+ TPS and sub-second finality to production-grade applications. This page outlines the planned network parameters, ecosystem architecture, and how to prepare for the mainnet launch.</p>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          <a href="testnet.html" class="btn btn-primary">Try Testnet Now &#8594;</a>
+          <a href="node.html" class="btn btn-secondary">Prepare Your Node</a>
+        </div>
+      </div>
+
+      <!-- Network Parameters -->
+      <section class="section" style="padding-top:0;">
+        <span class="section-label">Network Details</span>
+        <h2 class="section-title">Mainnet Parameters</h2>
+        <p class="section-subtitle">The following parameters are planned for the Monad Mainnet. Final values will be confirmed before launch.</p>
+
+        <table class="net-table" style="background:var(--bg-card);border-radius:12px;overflow:hidden;border:1px solid var(--border-color);">
+          <thead>
+            <tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Network Name</td><td class="val">Monad Mainnet</td><td>Primary production network</td></tr>
+            <tr><td>Chain ID</td><td class="val">TBA</td><td>Confirmed before launch</td></tr>
+            <tr><td>Native Currency</td><td class="val">MON</td><td>18 decimals</td></tr>
+            <tr><td>Block Time</td><td class="val">~500 ms</td><td>Target average block interval</td></tr>
+            <tr><td>Finality</td><td class="val">~800 ms</td><td>Single-slot deterministic finality</td></tr>
+            <tr><td>Target TPS</td><td class="val">10,000+</td><td>Sustained throughput under load</td></tr>
+            <tr><td>EVM Version</td><td class="val">Cancun</td><td>Full EIP-4844 blob support</td></tr>
+            <tr><td>Consensus</td><td class="val">MonadBFT</td><td>HotStuff-derived BFT protocol</td></tr>
+            <tr><td>Execution</td><td class="val">Parallel EVM</td><td>Optimistic concurrency control</td></tr>
+            <tr><td>RPC URL</td><td class="val">https://rpc.monad.xyz</td><td>Public endpoint (rate-limited)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- Ecosystem -->
+      <section class="section">
+        <span class="section-label">Ecosystem</span>
+        <h2 class="section-title">What's Being Built on Monad</h2>
+        <p class="section-subtitle">A rapidly growing ecosystem of DeFi protocols, NFT platforms, gaming dApps, and infrastructure providers is already building on Monad ahead of mainnet launch.</p>
+
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon">&#128181;</div>
+            <h3>DeFi &amp; Trading</h3>
+            <p>Automated market makers (AMMs), perpetual futures exchanges, lending protocols, and liquid staking primitives are being deployed to take advantage of Monad's throughput for high-frequency financial applications with tight spreads and minimal slippage.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#127914;</div>
+            <h3>NFTs &amp; Digital Assets</h3>
+            <p>Next-generation NFT marketplaces and launchpads leverage Monad's low gas costs and fast finality to support high-demand mints, real-time secondary trading, and on-chain royalty enforcement without congestion or failed transactions.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#127918;</div>
+            <h3>Gaming &amp; Social</h3>
+            <p>Fully on-chain games that update state every block become practical on Monad. With 500 ms block times, player actions, game logic, reward distribution, and social interactions all execute on-chain without the latency compromises required on slower chains.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128279;</div>
+            <h3>Infrastructure &amp; Tooling</h3>
+            <p>Oracles, cross-chain bridges, account abstraction relayers, indexers, and RPC providers are all building Monad-native integrations to support the ecosystem from day one, ensuring developers have enterprise-grade infrastructure available at launch.</p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- Staking -->
+      <section class="section">
+        <span class="section-label">Staking</span>
+        <h2 class="section-title">Securing the Network with MON</h2>
+        <div class="prose-section">
+          <p>Monad uses a Proof-of-Stake security model in which validators lock up (stake) MON tokens as collateral in exchange for the right to propose and vote on blocks. Validators that behave correctly and maintain high uptime earn MON staking rewards; validators that equivocate or are persistently offline face slashing — a partial loss of staked MON.</p>
+
+          <h3>Validator Requirements</h3>
+          <p>To operate a validator node on Monad Mainnet, participants must meet both hardware and stake requirements. The minimum self-stake amount and delegation mechanics will be confirmed before mainnet launch. Validator slots are limited to preserve the performance guarantees of MonadBFT's two-thirds quorum, but the team is committed to a validator count that provides meaningful decentralization.</p>
+
+          <ul class="feature-list">
+            <li>Minimum stake requirement: TBA (confirmed before launch)</li>
+            <li>Delegation enabled: MON holders can delegate to validators without running hardware</li>
+            <li>Rewards distributed: Per-block, proportional to stake weight</li>
+            <li>Unbonding period: Designed to balance security with liquidity</li>
+            <li>Slashing conditions: Double-signing, sustained downtime</li>
+          </ul>
+
+          <h3>Liquid Staking</h3>
+          <p>Several liquid staking protocols are building on Monad, allowing MON holders to earn staking rewards while keeping their assets liquid and usable in DeFi. Liquid staking tokens (LSTs) representing staked MON will be available from multiple providers at mainnet launch, enabling composable yield strategies across the ecosystem.</p>
+
+          <div class="highlight-box">
+            <p><strong>Not ready to run a validator?</strong> You can participate in network security by delegating your MON to an existing validator and earning a proportional share of their staking rewards — without needing to manage infrastructure.</p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- Bridge & Migration -->
+      <section class="section">
+        <span class="section-label">Migration</span>
+        <h2 class="section-title">Bridging Assets to Monad</h2>
+        <div class="prose-section">
+          <p>Monad Mainnet will launch with native bridging support and integrations from multiple third-party cross-chain bridge providers. ERC-20 tokens from Ethereum and other EVM-compatible chains can be bridged to Monad using canonical lock-and-mint or burn-and-mint mechanisms, with assets represented as standard ERC-20 tokens on Monad.</p>
+
+          <h3>Canonical Bridge</h3>
+          <p>The Monad Foundation will operate a canonical bridge between Ethereum and Monad Mainnet for ETH and select ERC-20 tokens. The canonical bridge uses a battle-tested security model with a multi-sig guardian council and optimistic challenge period for withdrawals back to Ethereum, balancing security with user experience.</p>
+
+          <h3>Third-Party Bridges</h3>
+          <p>Multiple established bridge protocols — including intent-based bridges for faster cross-chain transfers — will be integrated at launch. These provide options for users who prioritise speed over the most conservative security assumptions, with different trust and cost trade-offs.</p>
+
+          <h3>Migrating Your dApp</h3>
+          <p>For Ethereum dApp developers migrating to Monad, the process is straightforward: redeploy contracts using the same Solidity code, update frontend RPC configurations, and notify users to bridge their assets. No contract rewrites, no new languages, no toolchain changes. If your dApp works on Ethereum, it will work on Monad.</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo" style="margin-bottom:0.75rem;display:inline-flex;"><span class="logo-mark">M</span> Monad Build</a>
+          <p>The next-generation EVM-compatible Layer-1 blockchain built for 10,000+ TPS, sub-second finality, and full Ethereum developer compatibility.</p>
+          <div class="footer-socials">
+            <a href="https://twitter.com/monad_xyz" target="_blank" rel="noopener" title="X / Twitter">&#x1D54F;</a>
+            <a href="https://discord.gg/monad" target="_blank" rel="noopener" title="Discord">&#128172;</a>
+            <a href="https://github.com/monad-lab" target="_blank" rel="noopener" title="GitHub">&#8997;</a>
+            <a href="https://t.me/monad_xyz" target="_blank" rel="noopener" title="Telegram">&#9992;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Network</h5>
+          <ul>
+            <li><a href="mainnet.html">Mainnet</a></li>
+            <li><a href="testnet.html">Testnet</a></li>
+            <li><a href="node.html">Run a Node</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Build</h5>
+          <ul>
+            <li><a href="documentation.html">Documentation</a></li>
+            <li><a href="development-tools.html">Dev Tools</a></li>
+            <li><a href="documentation.html#api">API Reference</a></li>
+            <li><a href="development-tools.html#sdk">SDKs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Community</h5>
+          <ul>
+            <li><a href="https://discord.gg/monad" target="_blank" rel="noopener">Discord</a></li>
+            <li><a href="https://twitter.com/monad_xyz" target="_blank" rel="noopener">Twitter / X</a></li>
+            <li><a href="https://github.com/monad-lab" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://forum.monad.xyz" target="_blank" rel="noopener">Forum</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Monad Build. All rights reserved.</p>
+        <p><a href="documentation.html">Terms</a> &middot; <a href="documentation.html">Privacy</a></p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

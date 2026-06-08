@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" class="dark" style="color-scheme: dark;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Block Explorer — Monad Build</title>
+  <meta name="description" content="Search transactions, inspect addresses, and monitor live network statistics on the Monad Block Explorer.">
+  <link rel="stylesheet" href="monad.css">
+  <style>
+    .search-bar {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-card);
+      transition: border-color 0.2s;
+      max-width: 680px;
+    }
+    .search-bar:focus-within { border-color: var(--purple); }
+    .search-bar input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0.85rem 1.25rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .search-bar input::placeholder { color: var(--text-muted); font-family: inherit; }
+    .search-bar button {
+      background: var(--purple);
+      border: none;
+      color: #fff;
+      padding: 0 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .search-bar button:hover { background: #9580ff; }
+    .block-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 120px 100px;
+      gap: 1rem;
+      padding: 0.9rem 1.25rem;
+      border-bottom: 1px solid rgba(131,110,249,0.08);
+      font-size: 0.85rem;
+      align-items: center;
+    }
+    .block-row:last-child { border-bottom: none; }
+    .block-row:hover { background: var(--purple-glow); }
+    .block-num { color: var(--purple-light); font-weight: 600; font-family: monospace; }
+    .block-hash { color: var(--text-muted); font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .block-txs { color: var(--text-secondary); text-align: right; }
+    .block-time { color: var(--text-muted); text-align: right; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+<div class="site-wrapper">
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="index.html" class="logo"><span class="logo-mark">M</span>Monad Build</a>
+        <nav class="site-nav" id="site-nav">
+          <a href="index.html">Home</a>
+          <a href="development-tools.html">Dev Tools</a>
+          <a href="documentation.html">Docs</a>
+          <a href="explorer.html" class="active">Explorer</a>
+          <a href="mainnet.html">Mainnet</a>
+          <a href="testnet.html">Testnet</a>
+          <a href="node.html">Node</a>
+        </nav>
+        <a href="testnet.html" class="header-cta">Launch Testnet &#8599;</a>
+        <button class="mobile-menu-btn" onclick="document.getElementById('site-nav').classList.toggle('open')" aria-label="Toggle menu">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect y="0" width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <div class="container">
+
+      <div class="page-hero">
+        <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Explorer</div>
+        <div class="flex items-center gap-3" style="flex-wrap:wrap;margin-bottom:0.75rem;">
+          <h1>Monad Explorer</h1>
+          <span class="status-badge status-live"><span class="status-dot"></span>Testnet Live</span>
+        </div>
+        <p>Search transactions, blocks, and addresses on the Monad network. Inspect contract bytecode, decode events, and monitor on-chain activity in real time.</p>
+        <div class="search-bar">
+          <input type="text" placeholder="Search by address / tx hash / block number…" id="explorer-search">
+          <button onclick="window.open('https://explorer.monad.xyz/search?q='+document.getElementById('explorer-search').value,'_blank')">Search</button>
+        </div>
+      </div>
+
+      <!-- Network Stats -->
+      <section class="section" style="padding-top:0;">
+        <span class="section-label">Live Network Statistics</span>
+        <h2 class="section-title">Monad Testnet at a Glance</h2>
+
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-value" id="stat-blocks">—</div>
+            <div class="stat-label">Latest Block</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">~450ms</div>
+            <div class="stat-label">Avg Block Time</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">10,000+</div>
+            <div class="stat-label">Max TPS</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">&lt; 1s</div>
+            <div class="stat-label">Finality</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">10143</div>
+            <div class="stat-label">Chain ID</div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- Recent Blocks -->
+      <section class="section">
+        <span class="section-label">Recent Blocks</span>
+        <h2 class="section-title">Latest Blocks</h2>
+        <p class="section-subtitle" style="margin-bottom:1.5rem;">The most recent blocks confirmed on the Monad Testnet. Each block contains hundreds to thousands of transactions processed in parallel.</p>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:14px;overflow:hidden;">
+          <div class="block-row" style="background:var(--bg-secondary);font-weight:700;font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid var(--border-color);">
+            <div>Block</div>
+            <div>Hash</div>
+            <div style="text-align:right;">Txs</div>
+            <div style="text-align:right;">Age</div>
+          </div>
+          <div class="block-row">
+            <div class="block-num">#4,821,045</div>
+            <div class="block-hash">0x9f3a...c7d1</div>
+            <div class="block-txs">247 txs</div>
+            <div class="block-time">2s ago</div>
+          </div>
+          <div class="block-row">
+            <div class="block-num">#4,821,044</div>
+            <div class="block-hash">0x2b8e...a4f0</div>
+            <div class="block-txs">312 txs</div>
+            <div class="block-time">2s ago</div>
+          </div>
+          <div class="block-row">
+            <div class="block-num">#4,821,043</div>
+            <div class="block-hash">0xd10c...7e2b</div>
+            <div class="block-txs">198 txs</div>
+            <div class="block-time">3s ago</div>
+          </div>
+          <div class="block-row">
+            <div class="block-num">#4,821,042</div>
+            <div class="block-hash">0x5f44...9c3a</div>
+            <div class="block-txs">422 txs</div>
+            <div class="block-time">3s ago</div>
+          </div>
+          <div class="block-row">
+            <div class="block-num">#4,821,041</div>
+            <div class="block-hash">0x8d71...b150</div>
+            <div class="block-txs">89 txs</div>
+            <div class="block-time">4s ago</div>
+          </div>
+          <div style="padding:1rem 1.25rem;border-top:1px solid var(--border-color);">
+            <a href="https://explorer.monad.xyz/blocks" target="_blank" rel="noopener" class="card-link">View all blocks on Monad Explorer &#8599;</a>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- Explorer Features -->
+      <section class="section">
+        <span class="section-label">Explorer Features</span>
+        <h2 class="section-title">What You Can Do with the Monad Explorer</h2>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon">&#128269;</div>
+            <h3>Transaction Search</h3>
+            <p>Look up any transaction by its hash to see the sender, receiver, value transferred, gas used, input data, emitted events, and execution status. Internal transactions from contract calls are shown in a hierarchical call trace.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128100;</div>
+            <h3>Address &amp; Contract Inspection</h3>
+            <p>View the full transaction history, token balances, and deployed bytecode for any address. For verified contracts, read and write functions directly from the explorer UI using your connected wallet — no code required.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128202;</div>
+            <h3>Token Tracker</h3>
+            <p>Browse ERC-20, ERC-721, and ERC-1155 tokens deployed on Monad. See total supply, holder counts, transfer history, and price data for listed assets. Ideal for monitoring your deployed token contracts.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128203;</div>
+            <h3>Contract Verification</h3>
+            <p>Submit your smart contract's Solidity source code to be verified and published on the explorer. Once verified, users and auditors can read the code, inspect ABI functions, and interact with the contract directly from the explorer.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128293;</div>
+            <h3>Gas Tracker</h3>
+            <p>Monitor current gas prices across slow, standard, and fast tiers. The gas tracker updates in real time, helping you estimate transaction costs and optimise gas parameters in your applications for the best user experience.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128268;</div>
+            <h3>Event Log Decoder</h3>
+            <p>Event logs are automatically decoded for verified contracts, displaying human-readable parameter names and values instead of raw hex. Filter by event topic to isolate specific contract events within a block or time range.</p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- Access -->
+      <section class="section">
+        <span class="section-label">Access</span>
+        <h2 class="section-title">Explorer Endpoints</h2>
+        <table class="net-table" style="background:var(--bg-card);border-radius:12px;overflow:hidden;border:1px solid var(--border-color);">
+          <thead>
+            <tr><th>Network</th><th>Explorer URL</th><th>API Base URL</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Monad Testnet</td>
+              <td><a href="https://explorer.monad.xyz" target="_blank" rel="noopener" style="font-family:monospace;">explorer.monad.xyz</a></td>
+              <td class="val">https://explorer.monad.xyz/api</td>
+            </tr>
+            <tr>
+              <td>Monad Mainnet</td>
+              <td class="val" style="color:var(--text-muted);">Coming soon</td>
+              <td class="val" style="color:var(--text-muted);">Coming soon</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="prose-section" style="margin-top:1.5rem;">
+          <h3>Explorer API</h3>
+          <p>The Monad Explorer exposes a RESTful API compatible with the Etherscan API v2 standard. Use it to programmatically query transaction data, contract ABIs, event logs, and token transfers in your applications.</p>
+          <pre><code># Get contract ABI for a verified contract
+curl "https://explorer.monad.xyz/api?module=contract&action=getabi&address=0xCONTRACT_ADDRESS"</code></pre>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo" style="margin-bottom:0.75rem;display:inline-flex;"><span class="logo-mark">M</span> Monad Build</a>
+          <p>The next-generation EVM-compatible Layer-1 blockchain built for 10,000+ TPS, sub-second finality, and full Ethereum developer compatibility.</p>
+          <div class="footer-socials">
+            <a href="https://twitter.com/monad_xyz" target="_blank" rel="noopener" title="X / Twitter">&#x1D54F;</a>
+            <a href="https://discord.gg/monad" target="_blank" rel="noopener" title="Discord">&#128172;</a>
+            <a href="https://github.com/monad-lab" target="_blank" rel="noopener" title="GitHub">&#8997;</a>
+            <a href="https://t.me/monad_xyz" target="_blank" rel="noopener" title="Telegram">&#9992;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Network</h5>
+          <ul>
+            <li><a href="mainnet.html">Mainnet</a></li>
+            <li><a href="testnet.html">Testnet</a></li>
+            <li><a href="node.html">Run a Node</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Build</h5>
+          <ul>
+            <li><a href="documentation.html">Documentation</a></li>
+            <li><a href="development-tools.html">Dev Tools</a></li>
+            <li><a href="documentation.html#api">API Reference</a></li>
+            <li><a href="development-tools.html#sdk">SDKs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Community</h5>
+          <ul>
+            <li><a href="https://discord.gg/monad" target="_blank" rel="noopener">Discord</a></li>
+            <li><a href="https://twitter.com/monad_xyz" target="_blank" rel="noopener">Twitter / X</a></li>
+            <li><a href="https://github.com/monad-lab" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://forum.monad.xyz" target="_blank" rel="noopener">Forum</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Monad Build. All rights reserved.</p>
+        <p><a href="documentation.html">Terms</a> &middot; <a href="documentation.html">Privacy</a></p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

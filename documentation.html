@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" class="dark" style="color-scheme: dark;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Documentation — Monad Build</title>
+  <meta name="description" content="Official Monad Build documentation: architecture, API reference, integration guides, and tutorials.">
+  <link rel="stylesheet" href="monad.css">
+</head>
+<body>
+<div class="site-wrapper">
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="index.html" class="logo"><span class="logo-mark">M</span>Monad Build</a>
+        <nav class="site-nav" id="site-nav">
+          <a href="index.html">Home</a>
+          <a href="development-tools.html">Dev Tools</a>
+          <a href="documentation.html" class="active">Docs</a>
+          <a href="explorer.html">Explorer</a>
+          <a href="mainnet.html">Mainnet</a>
+          <a href="testnet.html">Testnet</a>
+          <a href="node.html">Node</a>
+        </nav>
+        <a href="testnet.html" class="header-cta">Launch Testnet &#8599;</a>
+        <button class="mobile-menu-btn" onclick="document.getElementById('site-nav').classList.toggle('open')" aria-label="Toggle menu">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect y="0" width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <div class="container">
+
+      <div class="page-hero">
+        <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Documentation</div>
+        <h1>Documentation</h1>
+        <p>Everything you need to understand, integrate with, and build on Monad — from high-level architecture overviews to low-level JSON-RPC method references.</p>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          <a href="#quickstart" class="btn btn-primary">Quick Start &#8594;</a>
+          <a href="#api" class="btn btn-secondary">API Reference</a>
+        </div>
+      </div>
+
+      <!-- Quick Start -->
+      <section class="section" style="padding-top:0;" id="quickstart">
+        <span class="section-label">Getting Started</span>
+        <h2 class="section-title">Deploy Your First Contract in 5 Minutes</h2>
+        <p class="section-subtitle">Monad is fully EVM-equivalent. If you can deploy to Ethereum, you can deploy to Monad — the only change is the RPC URL and chain ID.</p>
+
+        <ol class="steps">
+          <li class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4>Install Foundry</h4>
+              <p>Foundry is the recommended toolkit for Monad development. Install it with the official installer:</p>
+              <div class="prose-section"><pre><code>curl -L https://foundry.paradigm.xyz | bash
+foundryup</code></pre></div>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4>Create a New Project</h4>
+              <p>Initialise a new Foundry project and open the default counter contract:</p>
+              <div class="prose-section"><pre><code>forge init my-monad-project
+cd my-monad-project</code></pre></div>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4>Get Testnet MON Tokens</h4>
+              <p>Visit the Monad faucet at <strong>faucet.monad.xyz</strong>, connect your wallet, and claim test MON to pay for gas on the Monad Testnet.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4>Deploy to Monad Testnet</h4>
+              <p>Use Foundry's <code>forge create</code> to deploy. Replace <code>YOUR_PRIVATE_KEY</code> with your deployer key:</p>
+              <div class="prose-section"><pre><code>forge create src/Counter.sol:Counter \
+  --rpc-url https://rpc.monad.xyz/testnet \
+  --private-key YOUR_PRIVATE_KEY \
+  --broadcast</code></pre></div>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <h4>Verify on the Explorer</h4>
+              <p>Confirm your deployment was successful by searching for your contract address on <a href="explorer.html">Monad Explorer</a>. Verify the source code so others can audit and interact with it.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- Architecture -->
+      <section class="section" id="architecture">
+        <span class="section-label">Core Concepts</span>
+        <h2 class="section-title">Architecture Overview</h2>
+        <div class="prose-section">
+          <p>Understanding how Monad works under the hood helps you write more efficient contracts and anticipate how your application will behave at scale. There are three core systems to understand: the consensus layer (<strong>MonadBFT</strong>), the execution layer (the parallel EVM), and the storage layer (<strong>MonadDB</strong>).</p>
+
+          <h3>MonadBFT — Consensus Layer</h3>
+          <p>MonadBFT is a pipelined, Byzantine Fault Tolerant consensus protocol derived from HotStuff. It operates in a leader-rotation model where a designated proposer broadcasts a block, validators cast signed votes, and the block is committed once a two-thirds quorum is reached. The critical innovation is that MonadBFT <em>decouples</em> consensus from execution — validators commit to the <em>order</em> of transactions, not to their execution results. This allows a new consensus round to begin immediately after the previous block is ordered, rather than waiting for execution to complete. The result is ~400–500 ms block times and approximately 800 ms finality.</p>
+
+          <h3>Optimistic Parallel EVM — Execution Layer</h3>
+          <p>Once the order of a block is finalised by MonadBFT, the execution engine processes all transactions in that block simultaneously across available CPU cores. Each transaction's memory access is tracked in a read-set and write-set. After the parallel phase, a serial validation pass checks each result in block order: if a transaction's read-set is unchanged by all transactions committed before it, the result is applied; if a conflict is detected, the transaction is re-executed serially to produce the correct result. This optimistic model avoids all re-execution overhead for conflict-free transactions — the vast majority in typical workloads — while guaranteeing deterministic correctness identical to sequential execution.</p>
+
+          <h3>MonadDB — Storage Layer</h3>
+          <p>MonadDB is a custom embedded database designed specifically for blockchain state. Unlike Ethereum's approach of layering a Merkle-Patricia Trie over a generic key-value store (LevelDB or RocksDB), MonadDB implements the trie natively within its storage engine. This eliminates one level of indirection on every state access, reduces memory pressure by keeping less data in RAM, and allows concurrent reads and writes from multiple threads — crucial for the parallel EVM above it. MonadDB also supports efficient state snapshots for fast node synchronisation without full historical replay.</p>
+
+          <div class="highlight-box">
+            <p><strong>Key implication for smart contract developers:</strong> Monad executes transactions in parallel, but the <em>committed</em> result is always equivalent to a serial execution in block order. Your contract logic does not need to account for parallelism — write Solidity as you always have.</p>
+          </div>
+
+          <h3>RaptorCast — Network Propagation</h3>
+          <p>Monad uses RaptorCast, an erasure-coding-based gossip protocol, to propagate blocks across the validator network efficiently. RaptorCast splits each block into coded fragments and distributes them such that any node can reconstruct the full block from a subset of fragments. This dramatically reduces the bandwidth required per validator and speeds up block propagation, a critical factor in achieving sub-second finality at scale.</p>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- API Reference -->
+      <section class="section" id="api">
+        <span class="section-label">API Reference</span>
+        <h2 class="section-title">JSON-RPC API</h2>
+        <p class="section-subtitle">Monad implements the full Ethereum JSON-RPC specification. All standard <code>eth_*</code>, <code>net_*</code>, and <code>web3_*</code> methods are supported. The following table highlights the most commonly used endpoints.</p>
+
+        <table class="net-table" style="background:var(--bg-card);border-radius:12px;overflow:hidden;border:1px solid var(--border-color);">
+          <thead>
+            <tr><th>Method</th><th>Description</th><th>Category</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="val">eth_blockNumber</td><td>Returns the current block number</td><td><span class="tag">Block</span></td></tr>
+            <tr><td class="val">eth_getBlockByHash</td><td>Returns block data for a given hash</td><td><span class="tag">Block</span></td></tr>
+            <tr><td class="val">eth_getTransactionByHash</td><td>Returns transaction data for a given hash</td><td><span class="tag">Tx</span></td></tr>
+            <tr><td class="val">eth_getTransactionReceipt</td><td>Returns the receipt of a mined transaction</td><td><span class="tag">Tx</span></td></tr>
+            <tr><td class="val">eth_sendRawTransaction</td><td>Submits a signed transaction to the mempool</td><td><span class="tag">Tx</span></td></tr>
+            <tr><td class="val">eth_call</td><td>Executes a call without creating a transaction</td><td><span class="tag">State</span></td></tr>
+            <tr><td class="val">eth_estimateGas</td><td>Returns an estimate of the gas needed for a transaction</td><td><span class="tag">Gas</span></td></tr>
+            <tr><td class="val">eth_getLogs</td><td>Returns logs matching a filter object</td><td><span class="tag">Events</span></td></tr>
+            <tr><td class="val">debug_traceTransaction</td><td>Returns an opcode-level execution trace</td><td><span class="tag">Debug</span></td></tr>
+          </tbody>
+        </table>
+
+        <div class="prose-section" style="margin-top:1.5rem;">
+          <h3>Example: Get the Latest Block</h3>
+          <pre><code>curl https://rpc.monad.xyz/testnet \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "eth_getBlockByNumber",
+    "params": ["latest", false],
+    "id": 1
+  }'</code></pre>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <!-- Tutorials -->
+      <section class="section">
+        <span class="section-label">Tutorials</span>
+        <h2 class="section-title">Integration Guides</h2>
+        <div class="card-grid card-grid-2">
+          <div class="card">
+            <div class="card-icon">&#128181;</div>
+            <h3>Build a DEX on Monad</h3>
+            <p>Step-by-step guide to deploying an automated market maker (AMM) using UniswapV2 contracts. Covers local testing, deployment, and taking advantage of Monad's high TPS for arbitrage-resistant pricing.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#127914;</div>
+            <h3>On-Chain NFT Collection</h3>
+            <p>Deploy an ERC-721 collection with on-chain metadata and minting logic. Learn how Monad's parallel execution benefits high-demand mints where thousands of users transact simultaneously.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#127918;</div>
+            <h3>Real-Time On-Chain Game</h3>
+            <p>Build a multiplayer game where all state lives on-chain. Monad's sub-second finality enables near-real-time player interactions that would be impractical on Ethereum mainnet.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128200;</div>
+            <h3>High-Frequency Trading Bot</h3>
+            <p>Integrate with Monad's RPC to build a trading bot that monitors mempool activity, submits transactions with precise gas parameters, and reacts to price movements at millisecond scale.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo" style="margin-bottom:0.75rem;display:inline-flex;"><span class="logo-mark">M</span> Monad Build</a>
+          <p>The next-generation EVM-compatible Layer-1 blockchain built for 10,000+ TPS, sub-second finality, and full Ethereum developer compatibility.</p>
+          <div class="footer-socials">
+            <a href="https://twitter.com/monad_xyz" target="_blank" rel="noopener" title="X / Twitter">&#x1D54F;</a>
+            <a href="https://discord.gg/monad" target="_blank" rel="noopener" title="Discord">&#128172;</a>
+            <a href="https://github.com/monad-lab" target="_blank" rel="noopener" title="GitHub">&#8997;</a>
+            <a href="https://t.me/monad_xyz" target="_blank" rel="noopener" title="Telegram">&#9992;</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Network</h5>
+          <ul>
+            <li><a href="mainnet.html">Mainnet</a></li>
+            <li><a href="testnet.html">Testnet</a></li>
+            <li><a href="node.html">Run a Node</a></li>
+            <li><a href="explorer.html">Explorer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Build</h5>
+          <ul>
+            <li><a href="documentation.html">Documentation</a></li>
+            <li><a href="development-tools.html">Dev Tools</a></li>
+            <li><a href="documentation.html#api">API Reference</a></li>
+            <li><a href="development-tools.html#sdk">SDKs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Community</h5>
+          <ul>
+            <li><a href="https://discord.gg/monad" target="_blank" rel="noopener">Discord</a></li>
+            <li><a href="https://twitter.com/monad_xyz" target="_blank" rel="noopener">Twitter / X</a></li>
+            <li><a href="https://github.com/monad-lab" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://forum.monad.xyz" target="_blank" rel="noopener">Forum</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Monad Build. All rights reserved.</p>
+        <p><a href="documentation.html">Terms</a> &middot; <a href="documentation.html">Privacy</a></p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
